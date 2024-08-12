@@ -35,6 +35,36 @@
             loadData(); // 페이지 로드 시 데이터 로드
         });
     </script>
+    
+     <style>
+        /* 네비게이션 스타일 */
+        nav {
+            background-color: #f4f4f4; /* 배경색 */
+            padding: 10px; /* 여백 */
+        }
+        
+        ul {
+            list-style-type: none; /* 점 제거 */
+            padding: 0; /* 기본 여백 제거 */
+            margin: 0; /* 기본 여백 제거 */
+            display: flex; /* 수평 배치 */
+        }
+        
+        li {
+            margin-right: 20px; /* 항목 사이 여백 */
+        }
+        
+        li a {
+            text-decoration: none; /* 링크 밑줄 제거 */
+            color: #333; /* 텍스트 색상 */
+            font-family: Arial, sans-serif; /* 폰트 */
+        }
+        
+        li a:hover {
+            text-decoration: underline;
+            color: #007bff; 
+        }
+    </style>
 </head>
 <body>
 <h2>위치 히스토리 목록</h2>

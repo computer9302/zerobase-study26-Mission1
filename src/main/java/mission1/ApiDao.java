@@ -345,6 +345,42 @@ public class ApiDao {
 
         return lhldDtoList;
     }
+    
+ public int deleteWifiInfoApi(){
+        
+    	int i = 0;
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+
+            conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+
+            // SELECT SQL문
+            String sql = "DELETE from nearwifiinfo";
+            pstmt = conn.prepareStatement(sql);
+
+            // SQL 실행
+            int rowInserted = pstmt.executeUpdate();
+            if (rowInserted > 0) {
+                System.out.println("데이터가 성공적으로 삭제되었습니다.");
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            try {
+                if (pstmt != null) pstmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return i;
+    }
 }
 
            

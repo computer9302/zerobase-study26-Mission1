@@ -181,6 +181,11 @@ public class ApiExplorer {
 		return apiDao.selectLocationHistoryList();
 		
 	}
+	
+	public void deleteWifiInfoApi() {
+		ApiDao apiDao = new ApiDao();
+		apiDao.deleteWifiInfoApi();
+	}
 
 	public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException, InterruptedException{
 		 ApiExplorer apiExplorer = new ApiExplorer();

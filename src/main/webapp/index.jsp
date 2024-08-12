@@ -58,6 +58,7 @@
     <script type="text/javascript">
   	function nearWifiInfo(){
   		insertNearWifiInfoApi();
+  		deleteWifiInfoApi();
   	
   	}
   	
@@ -77,53 +78,122 @@
   	
     </script>
     
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-    function selectNearWifiInfo(){
-  	  fetch('selectNearWifiInfo')
-    		.then(response => response.json())
-    		.then(data => {
-    			console.log('Fetched Data:', data);
-    			const tableBody = document.getElementById('wifiTableBody');
-    			const tableFoot = document.querySelector('tfoot');
-    			
-    			tableBody.innerHTML = '';
-    			tableFoot.style.display = data.length > 0 ? 'none' : 'table-row-group';
-    			
-    			data.forEach((wifi) =>{
-    				console.log('wifi Entry:', wifi);
-    				console.log('km:', wifi.km);
-    				console.log('mrgNo:', wifi.mrgNo);
-    				console.log('instlFloor:', wifi.instlFloor);
-    				console.log('remars3:', wifi.remars3);
-    				
-    			
-    				const row = document.createElement('tr');
-    				row.innerHTML = `
-    				    <td>${wifi.km}</td>
-    					<td>${wifi.mrgNo}</td>
-                        <td>${wifi.wrdofc}</td>
-                        <td>${wifi.mainNm}</td>
-                        <td>${wifi.adress1}</td>
-                        <td>${wifi.adress2}</td>
-                        <td>${wifi.instlFloor}</td>
-                        <td>${wifi.instlTy}</td>
-                        <td>${wifi.instlMby}</td>
-                        <td>${wifi.svcSe}</td>
-                        <td>${wifi.cmcWr}</td>
-                        <td>${wifi.cnstcYear}</td>
-                        <td>${wifi.inoutDoor}</td>
-                        <td>${wifi.remars3}</td>
-                        <td>${wifi.lat}</td>
-                        <td>${wifi.lnt}</td>
-                        <td>${wifi.workDttm}</td>
-                        `;
-    				tableBody.appendChild(row);
-    			});
-    		})
-    		.catch(error => console.error('Error:', error));
-    		
-    }
+        $(document).ready(function() {
+            function selectNearWifiInfo() {
+                $.ajax({
+                    url: 'selectNearWifiInfo',  // 서블릿 URL
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log('Fetched Data:', data);
+                        
+                        const tableBody = $('#wifiTableBody');
+                        const tableFoot = $('tfoot');
+
+                        tableBody.empty(); // 기존 테이블 내용을 비움
+                        tableFoot.toggle(data.length === 0); // 데이터가 없으면 foot 보이기
+
+                        $.each(data, function(index, wifi) {
+                            console.log('wifi Entry:', wifi);
+                            console.log('km:', wifi.km);
+                            console.log('mrgNo:', wifi.mrgNo);
+                            console.log('instlFloor:', wifi.instlFloor);
+                            console.log('remars3:', wifi.remars3);
+
+                            const row = `
+                                <tr>
+                                    <td>${wifi.km}</td>
+                                    <td>${wifi.mrgNo}</td>
+                                    <td>${wifi.wrdofc}</td>
+                                    <td>${wifi.mainNm}</td>
+                                    <td>${wifi.adress1}</td>
+                                    <td>${wifi.adress2}</td>
+                                    <td>${wifi.instlFloor}</td>
+                                    <td>${wifi.instlTy}</td>
+                                    <td>${wifi.instlMby}</td>
+                                    <td>${wifi.svcSe}</td>
+                                    <td>${wifi.cmcWr}</td>
+                                    <td>${wifi.cnstcYear}</td>
+                                    <td>${wifi.inoutDoor}</td>
+                                    <td>${wifi.remars3}</td>
+                                    <td>${wifi.lat}</td>
+                                    <td>${wifi.lnt}</td>
+                                    <td>${wifi.workDttm}</td>
+                                </tr>
+                            `;
+                            tableBody.append(row);
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('AJAX 요청 실패:', textStatus, errorThrown);
+                    }
+                });
+            }
+
+            selectNearWifiInfo();
+        });
     </script>
+    
+    <script>
+    function deleteWifiInfoApi(){
+  		fetch('deleteWifiInfoApi')
+  		.then(response => response.text()) // JSON 대신 text로 받기
+  		.then(data => {
+  		    console.log('Response Text:', data);
+  	  
+  		})
+  		.catch(error => {
+  		    console.error('Error:', error);
+  		});
+  	}
+    </script>
+    
+     <style>
+        /* 네비게이션 스타일 */
+        nav {
+            background-color: #f4f4f4; /* 배경색 */
+            padding: 10px; /* 여백 */
+        }
+        
+        ul {
+            list-style-type: none; /* 점 제거 */
+            padding: 0; /* 기본 여백 제거 */
+            margin: 0; /* 기본 여백 제거 */
+            display: flex; /* 수평 배치 */
+        }
+        
+        li {
+            margin-right: 20px; /* 항목 사이 여백 */
+        }
+        
+        li a {
+            text-decoration: none; /* 링크 밑줄 제거 */
+            color: #333; /* 텍스트 색상 */
+            font-family: Arial, sans-serif; 
+        }
+        
+        li a:hover {
+            text-decoration: underline; 
+            color: #007bff; 
+        }
+       
+       
+        .container {
+            display: flex; /* 요소들을 수평으로 정렬 */
+            align-items: center; /* 요소들을 수직 가운데 정렬 */
+            gap: 10px; /* 요소들 사이의 간격 */
+        }
+        
+         th {
+            background-color: green; /* 배경색 초록색 */
+            color: white; /* 글씨색 하얀색 */
+            padding: 10px; /* 패딩을 추가하여 여백을 줍니다 */
+            text-align: center; /* 텍스트를 가운데 정렬합니다 */
+        }
+        
+    </style>
     
 </head>
 <body>
