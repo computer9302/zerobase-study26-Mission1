@@ -10,7 +10,7 @@
         $(document).ready(function() {
             function loadData() {
                 $.ajax({
-                    url: 'fetchData',  // 서블릿 URL
+                    url: 'LHLDServlet',  // 서블릿 URL
                     method: 'GET',
                     dataType: 'json',
                     success: function(data) {
