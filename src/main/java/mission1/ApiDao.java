@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ApiDao {
@@ -126,6 +127,7 @@ public class ApiDao {
                 ApiDto apiDto = new ApiDto();
                 apiDto.setMrgNo(rs.getString("mrgNo"));
                 apiDto.setWrdofc(rs.getString("wrdofc"));
+                apiDto.setMainNm(rs.getString("mainNm"));
                 apiDto.setAdress1(rs.getString("adress1"));
                 apiDto.setAdress2(rs.getString("adress2"));
                 apiDto.setInstlFloor(rs.getString("nullif(instlFloor, 0)"));
@@ -221,6 +223,7 @@ public class ApiDao {
                 apiKmDto.setKm(rs.getDouble("km"));
                 apiKmDto.setMrgNo(rs.getString("mrgNo"));
                 apiKmDto.setWrdofc(rs.getString("wrdofc"));
+                apiKmDto.setMainNm(rs.getString("mainNm"));
                 apiKmDto.setAdress1(rs.getString("adress1"));
                 apiKmDto.setAdress2(rs.getString("adress2"));
                 apiKmDto.setInstlFloor(rs.getString("instlFloor"));
@@ -255,6 +258,92 @@ public class ApiDao {
         }
 
         return apiKmDtoList;
+    }
+    
+    public void insertLocationHistoryList(Double lat, Double lnt, String localDateTime) {
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+
+            conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+
+            // INSERT SQL문
+            String sql = "INSERT INTO locationhistorylist (lat, lnt, viewDate, deleteButton) VALUES (?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            // 데이터 설정
+            pstmt.setDouble(1, lat);
+            pstmt.setDouble(2, lnt);
+            pstmt.setString(3, localDateTime);
+            pstmt.setString(4, "삭제");
+            
+
+
+            // SQL 실행
+            int rowInserted = pstmt.executeUpdate();
+            if (rowInserted > 0) {
+                System.out.println("데이터가 성공적으로 삽입되었습니다.");
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            try {
+                if (pstmt != null) pstmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public ArrayList<LocationHistoryListDto> selectLocationHistoryList(){
+        ArrayList<LocationHistoryListDto> lhldDtoList = new ArrayList<LocationHistoryListDto>();
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+
+            conn = DriverManager.getConnection(DB_URL, DB_USERNAME, DB_PASSWORD);
+
+            // SELECT SQL문
+            String sql = "SELECT * FROM locationhistorylist";
+            pstmt = conn.prepareStatement(sql);
+
+            // SQL 실행
+            rs = pstmt.executeQuery();
+
+            // DB -> ApiDto 저장
+
+            // int i=0;
+            while (rs.next()) {
+                LocationHistoryListDto lhld = new LocationHistoryListDto();
+                lhld.setId(rs.getInt("id"));
+                lhld.setLat(rs.getDouble("lat"));
+                lhld.setLnt(rs.getDouble("lnt"));
+                lhld.setLocalDateTime(rs.getString("viewDate"));
+                lhld.setDelete123(rs.getString("deleteButton"));
+                
+                lhldDtoList.add(lhld);
+
+                // System.out.println(apiDtoList.get(i).getMrgNo());
+                //  i++;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        } finally{
+            try {
+                if (pstmt != null) pstmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lhldDtoList;
     }
 }
 

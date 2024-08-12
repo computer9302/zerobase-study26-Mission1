@@ -1,6 +1,8 @@
 package mission1;
 
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -119,6 +121,15 @@ public class ApiExplorer {
 				Double lat = latlntBeanServlet.lat;
 				Double lnt = latlntBeanServlet.lnt;
 				System.out.println(lat+" "+lnt);
+				LocalDateTime localDateTime = LocalDateTime.now();
+				
+				ApiDao apiDao = new ApiDao();
+				
+				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+		        String formattedDateTime = localDateTime.format(formatter);
+				
+		        apiDao.insertLocationHistoryList(lat, lnt, formattedDateTime);
+				
 			
 				// 임의의 좌표 값 = public_wifi 테이블의 lat, lnt 값
 				ApiExplorer apiExplorer = new ApiExplorer();
@@ -136,11 +147,11 @@ public class ApiExplorer {
 				}
 				
 				for(int i = 0; i < apiKmDtoList.size(); i++) {
-					ApiDao apiDao = new ApiDao();
 					apiDao.insertnearWifiInfo(apiKmDtoList.get(i));
 					// insertApi()와 달리 1로는 부족하다. 2로 설정해야 address error, sqlsyntaxException이 발생하지 않는다.
 					Thread.sleep(2);
 				}
+		
 		
 	}
 	
@@ -162,6 +173,12 @@ public class ApiExplorer {
 		 
 		 return apiKmDto;
 		
+		
+	}
+	
+	public ArrayList<LocationHistoryListDto> selectLocationHistoryList(){
+		ApiDao apiDao = new ApiDao();
+		return apiDao.selectLocationHistoryList();
 		
 	}
 
